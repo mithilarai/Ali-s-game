@@ -11,7 +11,6 @@ var walk2;
 var brick;
 var wall1;
 var start;
-
 function preload(){
   runningSurvivor = loadAnimation ("images/surviver/tile000.png","images/surviver/tile001.png","images/surviver/tile002.png"
   ,"images/surviver/tile003.png","images/surviver/tile004.png")
@@ -137,10 +136,16 @@ function setup(){
     spritegun1.addAnimation("left",gun2)
     spritegun1.scale=0.1;     
     spritegun1.visible =false;
-    spritegun2=createSprite(robot.x+30,robot.y,50,50)
-    spritegun2.addAnimation(gun2right)
+    spritegun2=createSprite(robot2.x+30,robot2.y,50,50)
+    spritegun2.addAnimation("right",gun2right)
+    spritegun2.addAnimation("left",gun2)
     spritegun2.scale=0.1;     
-    spritegun1.visible =false;
+    spritegun2.visible =false;
+    spritegun3=createSprite(robot3.x+30,robot3.y,50,50)
+    spritegun3.addAnimation("right",gun2right)
+    spritegun3.addAnimation("left",gun2)
+    spritegun3.scale=0.1;     
+    spritegun3.visible =false;
     surviver.debug=true;
     surviver.setCollider("rectangle",0,0,100,175)
     start2 = createSprite(840,365,1700,760)
@@ -156,7 +161,7 @@ camo2 =createSprite(870,720,260,150)
   camo2.debug = true;
  
 
-
+bulletGroup = new Group();
 
 
 
@@ -173,7 +178,7 @@ spritegun1.x=robot.x+30
 spritegun1.y=robot.y+10
 spritegun2.x=robot2.x+30
 spritegun2.y=robot2.y+10
-let a = 4;
+
 
 // if(surviver.isTouching(radar)){
 //  spritegun1.visible = true;
@@ -183,36 +188,36 @@ let a = 4;
 //   spritegun1.visible=false;
 // }
 
-if(surviver.isTouching(radar2)){
-  spritegun2.visible = true;
-  robot2.x= surviver.x-90;
-  robot2.y=surviver.y;
-}
-else{
-  spritegun2.visible=false;
-}
-if(surviver.isTouching(radar3)){
+// if(surviver.isTouching(radar2)){
+//   spritegun2.visible = true;
+//   robot2.x= surviver.x-90;
+//   robot2.y=surviver.y;
+// }
+// else{
+//   spritegun2.visible=false;
+// }
+// if(surviver.isTouching(radar3)){
  
-  robot3.x= surviver.x-90;
-  robot3.y=surviver.y;
-}
- if (surviver.isTouching(radar3)&&surviver.velocityX<-1){
-   robot3.x=surviver.x+90;
- robot3.changeAnimation("running4",runningRobot2)
- }
- if (surviver.isTouching(radar3)&&surviver.velocityX>1){
-   robot3.x=surviver.x-90;
-  robot3.changeAnimation("running4",runningRobot2 )
- }     
+//   robot3.x= surviver.x-90;
+//   robot3.y=surviver.y;
+// }
+//  if (surviver.isTouching(radar3)&&surviver.velocityX<-1){
+//    robot3.x=surviver.x+90;
+//  robot3.changeAnimation("running4",runningRobot2)
+//  }
+//  if (surviver.isTouching(radar3)&&surviver.velocityX>1){
+//    robot3.x=surviver.x-90;
+//   robot3.changeAnimation("running4",runningRobot2 )
+//  }     
 
- if (surviver.isTouching(radar2)&&surviver.velocityX<-1){
-   robot2.x=surviver.x+90;
-  // robot3.changeAnimation("running3",runningRobot)
- }
- if (surviver.isTouching(radar2)&&surviver.velocityX>1){
-   robot2.x=surviver.x-90;
-  //robot3.changeAnimation("running3",runningRobot)
- }
+//  if (surviver.isTouching(radar2)&&surviver.velocityX<-1){
+//    robot2.x=surviver.x+90;
+//   // robot3.changeAnimation("running3",runningRobot)
+//  }
+//  if (surviver.isTouching(radar2)&&surviver.velocityX>1){
+//    robot2.x=surviver.x-90;
+//   //robot3.changeAnimation("running3",runningRobot)
+//  }
 //  if (surviver.isTouching(radar)&&surviver.velocityX === 8){
 //   robot.velocityX=5 
 //   robot.x=surviver.x-90;
@@ -232,14 +237,19 @@ if(surviver.isTouching(radar3)){
 //   robot.changeAnimation("running4",runningRobot2)
 //  }
 
-
+//robot animation
 if(surviver.isTouching(radar)){
+spawnBullet();
 
   if(surviver.velocityX ===0 && surviver.x>robot.x)
   {
     robot.x= surviver.x-70;
     robot.y=surviver.y;
     robot.velocityX =5
+    for (var i =0 ;i< bulletGroup.lenght;i++){
+   
+      bulletGroup.get(i).velocityX=5
+    }
 
     spritegun1.changeAnimation("right",gun2right)
     robot.changeAnimation("right",runningRobot)
@@ -247,6 +257,7 @@ if(surviver.isTouching(radar)){
     spritegun1.x = robot.x +30;
     spritegun1.y = robot.y
   }
+   
   if(surviver.velocityX ===0 && surviver.x<robot.x)
 {
   robot.changeAnimation("left",runningRobot2)
@@ -257,7 +268,10 @@ robot.velocityX =-5
   spritegun1.x = robot.x -30;
   spritegun1.y = robot.y
   spritegun1.changeAnimation("left",gun2)
-
+  for (var i =0 ;i< bulletGroup.lenght;i++){
+   
+    bulletGroup.get(i).velocityX=-5
+  }
 }
   if( keyDown(RIGHT_ARROW) )
   {
@@ -270,6 +284,10 @@ robot.velocityX =-5
     spritegun1.x = robot.x +30;
     spritegun1.y = robot.y
     spritegun1.changeAnimation("right",gun2right)
+    for (var i =0 ;i< bulletGroup.lenght;i++){
+   
+      bulletGroup.get(i).velocityX=5
+    }
   }
   
  if( keyDown(LEFT_ARROW) ){
@@ -282,6 +300,10 @@ robot.velocityX =-5
     spritegun1.x = robot.x -30;
     spritegun1.y = robot.y
     spritegun1.changeAnimation("left",gun2)
+    for (var i =0 ;i< bulletGroup.lenght;i++){
+   
+      bulletGroup.get(i).velocityX=-5
+    }
   }
   
 
@@ -289,6 +311,121 @@ robot.velocityX =-5
 else{
   spritegun1.visible = false;
 
+}
+
+// robot2
+if(surviver.isTouching(radar2)){
+
+  if(surviver.velocityX ===0 && surviver.x>robot2.x)
+  {
+    robot2.x= surviver.x-70;
+    robot2.y=surviver.y;
+    robot2.velocityX =5
+
+    spritegun2.changeAnimation("right",gun2right)
+    robot2.changeAnimation("right",runningRobot)
+    spritegun2.visible= true;
+    spritegun2.x = robot2.x +30;
+    spritegun2.y = robot2.y
+  }
+  if(surviver.velocityX ===0 && surviver.x<robot2.x)
+{
+  robot2.changeAnimation("left",runningRobot2)
+robot2.velocityX =-5
+  robot2.x= surviver.x+70;
+    robot2.y=surviver.y;
+ spritegun2.visible= true;
+  spritegun2.x = robot2.x -30;
+  spritegun2.y = robot2.y
+  spritegun2.changeAnimation("left",gun2)
+
+}
+  if( keyDown(RIGHT_ARROW) )
+  {
+    robot2.changeAnimation("right",runningRobot)
+    robot2.x= surviver.x-70;
+    robot2.y=surviver.y;
+    robot2.velocityX =5
+
+    spritegun2.visible= true;
+    spritegun2.x = robot2.x +30;
+    spritegun2.y = robot2.y
+    spritegun2.changeAnimation("right",gun2right)
+  }
+  
+ if( keyDown(LEFT_ARROW) ){
+  robot2.changeAnimation("left",runningRobot2)
+  robot2.velocityX =-5
+
+  robot2.x= surviver.x+70;
+    robot2.y=surviver.y;
+   spritegun2.visible= true;
+    spritegun2.x = robot2.x -30;
+    spritegun2.y = robot2.y
+    spritegun2.changeAnimation("left",gun2)
+  }
+  
+
+}
+else{
+  spritegun2.visible = false;
+}
+//robot3
+if(surviver.isTouching(radar3)){
+
+  if(surviver.velocityX ===0 && surviver.x>robot3.x)
+  {
+    robot3.x= surviver.x-70;
+    robot3.y=surviver.y;
+    robot3.velocityX =5
+
+    spritegun3.changeAnimation("right",gun2right)
+    robot3.changeAnimation("right",runningRobot)
+    spritegun3.visible= true;
+    spritegun3.x = robot3.x +30;
+    spritegun3.y = robot3.y
+  }
+  if(surviver.velocityX ===0 && surviver.x<robot3.x)
+{
+  robot3.changeAnimation("left",runningRobot2)
+robot3.velocityX =-5
+  robot3.x= surviver.x+70;
+    robot3.y=surviver.y;
+ spritegun3.visible= true;
+  spritegun3.x = robot3.x -30;
+  spritegun3.y = robot3.y
+  spritegun3.changeAnimation("left",gun2)
+
+}
+  if( keyDown(RIGHT_ARROW) )
+  {
+    robot3.changeAnimation("right",runningRobot)
+    robot3.x= surviver.x-70;
+    robot3.y=surviver.y;
+    robot3.velocityX =5
+
+    spritegun3.visible= true;
+    spritegun3.x = robot3.x +30;
+    spritegun3.y = robot3.y
+    spritegun3.changeAnimation("right",gun2right)
+  }
+  
+ if( keyDown(LEFT_ARROW) ){
+  robot3.changeAnimation("left",runningRobot2)
+  robot3.velocityX =-5
+
+  robot3.x= surviver.x+70;
+    robot3.y=surviver.y;
+   spritegun3.visible= true;
+    spritegun3.x = robot3.x -30;
+    spritegun3.y = robot3.y
+    spritegun3.changeAnimation("left",gun2)
+  }
+  
+
+}
+else{
+  spritegun3.visible = false;
 }
 if (surviver.isTouching(radar)&&surviver.isTouching(camo2)){
   robot.x = 50
@@ -559,18 +696,96 @@ walk.stop();
    rect(870,720,260,150)
    fill(100,210,50,100)
    noStroke()
+   
  ellipse(robot.x,robot.y,150,150)
  ellipse(robot2.x,robot2.y,150,150)
  ellipse(robot3.x,robot3.y,150,150)
 drawSprites();
+
 textSize(50);
 fill("black")
   text (mouseX+":"+mouseY+":"+surviver.x+":"+surviver.y,720,70)
-  
+ 
 }
+
 function keyPressed(){
  if (keyCode===65){
    surviver.changeAnimation("shooting",shoot)
    
  }
+}
+function spawnBullet(){
+  if (frameCount % 20 === 0){
+
+
+if(surviver.velocityX ===0 && surviver.x>robot.x)
+{
+  robot.x= surviver.x-70;
+  robot.y=surviver.y;
+  robot.velocityX =5
+  
+  spritegun1.changeAnimation("right",gun2right)
+  robot.changeAnimation("right",runningRobot)
+  spritegun1.visible= true;
+  spritegun1.x = robot.x +30;
+  spritegun1.y = robot.y
+  var bullet = createSprite(spritegun1.x +30,spritegun1.y-10,10,2);
+  bullet.shapeColor = "white";
+  bulletGroup.add(bullet)
+  bullet.lifetime = 100
+  bullet.velocityX=5
+
+}
+ 
+if(surviver.velocityX ===0 && surviver.x<robot.x)
+{
+robot.changeAnimation("left",runningRobot2)
+robot.velocityX =-5
+robot.x= surviver.x+70;
+  robot.y=surviver.y;
+spritegun1.visible= true;
+spritegun1.x = robot.x -30;
+spritegun1.y = robot.y
+spritegun1.changeAnimation("left",gun2)
+var bullet = createSprite(spritegun1.x -30,spritegun1.y-10,10,2);
+bullet.shapeColor = "white";
+bulletGroup.add(bullet)
+bullet.lifetime = 100
+bullet.velocityX=-5
+}
+if( keyDown(RIGHT_ARROW) )
+{
+  robot.changeAnimation("right",runningRobot)
+  robot.x= surviver.x-70;
+  robot.y=surviver.y;
+  robot.velocityX =5
+
+  spritegun1.visible= true;
+  spritegun1.x = robot.x +30;
+  spritegun1.y = robot.y
+  spritegun1.changeAnimation("right",gun2right)
+  var bullet = createSprite(spritegun1.x +30,spritegun1.y-10,10,2);
+  bullet.shapeColor = "white";
+bulletGroup.add(bullet)
+bullet.lifetime = 100
+bullet.velocityX=5  
+}
+
+if( keyDown(LEFT_ARROW) ){
+robot.changeAnimation("left",runningRobot2)
+robot.velocityX =-5
+
+robot.x= surviver.x+70;
+  robot.y=surviver.y;
+ spritegun1.visible= true;
+  spritegun1.x = robot.x -30;
+  spritegun1.y = robot.y
+  spritegun1.changeAnimation("left",gun2)
+  var bullet = createSprite(spritegun1.x +30,spritegun1.y-10,10,2);
+  bullet.shapeColor = "white";
+bulletGroup.add(bullet)
+bullet.lifetime = 100
+bullet.velocityX=-5
+}
+}
 }
