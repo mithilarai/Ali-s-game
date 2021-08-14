@@ -11,6 +11,10 @@ var walk2;
 var brick;
 var wall1;
 var start;
+var healthbar1;
+var score=100;
+var shieldScore=100;
+var shieldFlag = 0
 function preload(){
   runningSurvivor = loadAnimation ("images/surviver/tile000.png","images/surviver/tile001.png","images/surviver/tile002.png"
   ,"images/surviver/tile003.png","images/surviver/tile004.png")
@@ -52,7 +56,13 @@ shoot =loadAnimation("images/surviver/tile005.png",
 "images/surviver/tile007.png",
 "images/surviver/tile008.png",
 "images/surviver/tile009.png")
+
+
+shootright = loadAnimation("images/surviver2/tile007.png",
+"images/surviver2/tile008.png",
+"images/surviver2/tile009.png")
 }
+
 
 
 
@@ -60,14 +70,16 @@ function setup(){
   createCanvas(displayWidth,displayHeight-40 );
     // engine = Engine.create();
     // world = engine.world;
-    
+   surviverBulletGroup= new Group();
     surviver = createSprite(870,675,50,50);
     
+
     surviver.addAnimation ("standing",standingSurvivor)
     surviver.addAnimation ("running",runningSurvivor)
     surviver.addAnimation ("standing2",standingSurvivor2)
     surviver.addAnimation ("running2",runningSurvivor2)
     surviver.addAnimation("shooting",shoot);
+    surviver.addAnimation("shooting",shootright);
     surviver.scale = 0.5;
     surviver.alpha=0.5;
     robot = createSprite(50,350,50,50);
@@ -146,7 +158,7 @@ function setup(){
     spritegun3.addAnimation("left",gun2)
     spritegun3.scale=0.1;     
     spritegun3.visible =false;
-    surviver.debug=true;
+    surviver.debug=false;
     surviver.setCollider("rectangle",0,0,100,175)
     start2 = createSprite(840,365,1700,760)
     start2.shapeColor="white"
@@ -159,26 +171,185 @@ function setup(){
 camo2 =createSprite(870,720,260,150)
     camo2.visible = false;
   camo2.debug = true;
- 
-
+ healthbar=createSprite(1715,50,410,50)
+healthbar.shapeColor="black"
 bulletGroup = new Group();
-
-
+bar1=createSprite(1895,50,40,40)
+bar1.shapeColor="green"
+bar2=createSprite(1855,50,40,40)
+bar2.shapeColor="green"
+bar3=createSprite(1815,50,40,40)
+bar3.shapeColor="green"
+bar4=createSprite(1775,50,40,40)
+bar4.shapeColor="green"
+bar5=createSprite(1735,50,40,40)
+bar5.shapeColor="green"
+bar6=createSprite(1695,50,40,40)
+bar6.shapeColor="green"
+bar7=createSprite(1655,50,40,40)
+bar7.shapeColor="green"
+bar8=createSprite(1615,50,40,40)
+bar8.shapeColor="green"
+bar9=createSprite(1575,50,40,40)
+bar9.shapeColor="green"
+bar10=createSprite(1535,50,40,40)
+bar10.shapeColor="green"
+shield=createSprite(surviver.x,surviver.y,70,110)
+shield.setCollider("circle",0,0,50)
+shield.debug=true;
+shield.visible=false;
 
 }
 
 function draw(){
    background(bgimage);
  
+ console.log("Sheild"+shieldFlag)
+ if((keyWentDown("s"))&& shieldScore>0&&shieldFlag===0)
+{
+  shieldFlag = 1
+}
+else if((keyWentDown("s"))&&shieldFlag===1 && shieldScore>0)
+{
+  shieldFlag =0
+}
+else if(shieldScore<=0)
+{
+  shieldFlag=0  
+}
+  
+ if( keyDown("q") &&  keyDown(RIGHT_ARROW)){
+        surviver.changeAnimation("shooting",shootright)
+  var bullet = createSprite(surviver.x +30,surviver.y-10,10,2);
+  bullet.shapeColor = "white";
+surviverBulletGroup.add(bullet)
+bullet.lifetime = 100
+bullet.velocityX=8
+
+for (var i =0 ;i< bulletGroup.lenght;i++){
+
+  bulletGroup.get(i).velocityX=5
+}
+}
+if( keyDown("q") &&  keyDown(LEFT_ARROW)){
+        
+  surviver.changeAnimation("shooting",shoot);
+  var bullet = createSprite(surviver.x -30,surviver.y-10,10,2);
+  bullet.shapeColor = "white";
+surviverBulletGroup.add(bullet)
+bullet.lifetime = 100
+bullet.velocityX=-8
+
+for (var i =0 ;i< bulletGroup.lenght;i++){
+
+  bulletGroup.get(i).velocityX=-8
+}
+}
 //  if( surviver.x<=5||surviver.x>=1680){
 //    surviver.velocityX=0;
 //    surviver.velocityY=0; 
 //  }
+
 spritegun1.x=robot.x+30
 spritegun1.y=robot.y+10
 spritegun2.x=robot2.x+30
 spritegun2.y=robot2.y+10
-
+shield.x=surviver.x
+shield.y=surviver.y
+if(bulletGroup.isTouching(surviver)&& shieldFlag===0){
+score--;
+}
+if(score<90&&score>80){
+  bar1.shapeColor="black"
+}
+if(score<80&&score>70){
+  bar1.shapeColor="black"
+  bar2.shapeColor="black"
+}
+if(score<70&&score>60){
+  bar1.shapeColor="black"
+  bar2.shapeColor="black"
+  bar3.shapeColor="black"
+}
+if(score<60&&score>50){
+  bar1.shapeColor="black"
+  bar2.shapeColor="black"
+  bar3.shapeColor="black"
+  bar4.shapeColor="black"
+}
+if(score<50&&score>40){
+  bar1.shapeColor="black"
+  bar2.shapeColor="black"
+  bar3.shapeColor="black"
+  bar4.shapeColor="black"
+  bar5.shapeColor="black"
+  bar6.shapeColor="yellow"
+  bar7.shapeColor="yellow"
+  bar8.shapeColor="yellow"
+  bar9.shapeColor="yellow"
+  bar10.shapeColor="yellow"
+}
+if(score<40&&score>30){
+  bar1.shapeColor="black"
+  bar2.shapeColor="black"
+  bar3.shapeColor="black"
+  bar4.shapeColor="black"
+  bar5.shapeColor="black"
+  bar6.shapeColor="black"
+  bar7.shapeColor="yellow"
+  bar8.shapeColor="yellow"
+  bar9.shapeColor="yellow"
+  bar10.shapeColor="yellow"
+}
+if(score<30&&score>20){
+  bar1.shapeColor="black"
+  bar2.shapeColor="black"
+  bar3.shapeColor="black"
+  bar4.shapeColor="black"
+  bar5.shapeColor="black"
+  bar6.shapeColor="black"
+  bar7.shapeColor="black"
+  bar8.shapeColor="red"
+  bar9.shapeColor="red"
+  bar10.shapeColor="red"
+}
+if(score<20&&score>10){
+  bar1.shapeColor="black"
+  bar2.shapeColor="black"
+  bar3.shapeColor="black"
+  bar4.shapeColor="black"
+  bar5.shapeColor="black"
+  bar6.shapeColor="black"
+  bar7.shapeColor="black"
+  bar8.shapeColor="black"
+  bar9.shapeColor="red"
+  bar10.shapeColor="red"
+}
+if(score<10&&score>0){
+  bar1.shapeColor="black"
+  bar2.shapeColor="black"
+  bar3.shapeColor="black"
+  bar4.shapeColor="black"
+  bar5.shapeColor="black"
+  bar6.shapeColor="black"
+  bar7.shapeColor="black"
+  bar8.shapeColor="black"
+  bar9.shapeColor="black"
+  bar10.shapeColor="red"
+}
+if(score<0){
+  bar1.shapeColor="black"
+  bar2.shapeColor="black"
+  bar3.shapeColor="black"
+  bar4.shapeColor="black"
+  bar5.shapeColor="black"
+  bar6.shapeColor="black"
+  bar7.shapeColor="black"
+  bar8.shapeColor="black"
+  bar9.shapeColor="black"
+  bar10.shapeColor="black"
+ 
+}
 
 // if(surviver.isTouching(radar)){
 //  spritegun1.visible = true;
@@ -315,13 +486,16 @@ else{
 
 // robot2
 if(surviver.isTouching(radar2)){
-
+  spawnBullet2();
   if(surviver.velocityX ===0 && surviver.x>robot2.x)
   {
     robot2.x= surviver.x-70;
     robot2.y=surviver.y;
     robot2.velocityX =5
-
+    for (var i =0 ;i< bulletGroup.lenght;i++){
+   
+      bulletGroup.get(i).velocityX=5
+    }
     spritegun2.changeAnimation("right",gun2right)
     robot2.changeAnimation("right",runningRobot)
     spritegun2.visible= true;
@@ -338,6 +512,10 @@ robot2.velocityX =-5
   spritegun2.x = robot2.x -30;
   spritegun2.y = robot2.y
   spritegun2.changeAnimation("left",gun2)
+  for (var i =0 ;i< bulletGroup.lenght;i++){
+   
+    bulletGroup.get(i).velocityX=-5
+  }
 
 }
   if( keyDown(RIGHT_ARROW) )
@@ -346,7 +524,10 @@ robot2.velocityX =-5
     robot2.x= surviver.x-70;
     robot2.y=surviver.y;
     robot2.velocityX =5
-
+    for (var i =0 ;i< bulletGroup.lenght;i++){
+   
+      bulletGroup.get(i).velocityX=5
+    }
     spritegun2.visible= true;
     spritegun2.x = robot2.x +30;
     spritegun2.y = robot2.y
@@ -363,6 +544,10 @@ robot2.velocityX =-5
     spritegun2.x = robot2.x -30;
     spritegun2.y = robot2.y
     spritegun2.changeAnimation("left",gun2)
+    for (var i =0 ;i< bulletGroup.lenght;i++){
+   
+      bulletGroup.get(i).velocityX=-5
+    }
   }
   
 
@@ -507,7 +692,33 @@ if(robot3.velocityX===5)
     robot3.velocityY = 5; 
     gameState = "play"
   }
-   
+   if(score<=0)
+   {
+     background(0)
+     gameState="end"
+     textSize(80)
+     fill("RED")
+     text("GAMEOVER",800,500)
+   }
+   if(gameState==="end")
+   {
+    camo2.destroy();
+    wall1.destroy()
+    wall2.destroy()
+    wall3.destroy()
+    wall4.destroy()
+    wall5.destroy();
+    wall6.destroy()
+    wall7.destroy()
+    wall8.destroy()
+    wall9.destroy()
+    wall10.destroy();
+    wall11.destroy()
+    wall12.destroy()
+    wall13.destroy()
+    wall14.destroy()
+    
+   }
    if(gameState==="play"){
  start.visible=false;
  start2.visible=false;
@@ -646,17 +857,44 @@ if(robot3.x===1110&&robot3.y>=600){
   
   
    if (keyWentDown(RIGHT_ARROW)){
+
+     if(shieldFlag===1)
+      {   
+        ellipse(surviver.x,surviver.y,80,110)
+        if(bulletGroup.bounceOff(shield))
+        {
+        shieldScore=shieldScore-5
+        }
+      } 
        surviver.velocityX = 8;
        surviver.changeAnimation("running2",runningSurvivor2);
        walk.play();
    }
    if (keyWentUp(RIGHT_ARROW)){
+    if(shieldFlag===1)
+      {   
+        ellipse(surviver.x,surviver.y,80,110)
+        if(bulletGroup.bounceOff(shield))
+        {
+        shieldScore=shieldScore-5
+        }
+      } 
+     
     surviver.velocityX = 0;
     surviver.changeAnimation("standing2",standingSurvivor2);
     walk.stop();
    }
    
    if (keyWentDown(LEFT_ARROW)){
+    if(shieldFlag===1)
+      {   
+        ellipse(surviver.x,surviver.y,80,110)
+        if(bulletGroup.bounceOff(shield))
+        {
+        shieldScore=shieldScore-5
+        }
+      } 
+     
     surviver.velocityX =- 8;
     surviver.changeAnimation("running",runningSurvivor);
     walk.play();
@@ -664,32 +902,82 @@ if(robot3.x===1110&&robot3.y>=600){
 
 }
 if(keyWentUp(LEFT_ARROW)){
-    surviver.velocityX =0;
+  if(shieldFlag===1)
+      {   
+        ellipse(surviver.x,surviver.y,80,110)
+        if(bulletGroup.bounceOff(shield))
+        {
+        shieldScore=shieldScore-5
+        }
+      } 
+     surviver.velocityX =0;
     surviver.changeAnimation("standing",standingSurvivor);
     walk.stop();
    }
 
    if (keyWentDown(UP_ARROW)){
+    if(shieldFlag===1)
+      {   
+        ellipse(surviver.x,surviver.y,80,110)
+        if(bulletGroup.bounceOff(shield))
+        {
+        shieldScore=shieldScore-5
+        }
+      } 
+     
     surviver.velocityY = -8;
     surviver.changeAnimation("running2",runningSurvivor2);
     walk.play();
 }
 if (keyWentUp(UP_ARROW)){
- surviver.velocityY = 0;
+  if(shieldFlag===1)
+      {   
+        ellipse(surviver.x,surviver.y,80,110)
+        if(bulletGroup.bounceOff(shield))
+        {
+        shieldScore=shieldScore-5
+        }
+      } 
+     surviver.velocityY = 0;
  surviver.changeAnimation("standing2",standingSurvivor2);
  walk.stop();
 }
 if (keyWentDown(DOWN_ARROW)){
+  if(shieldFlag===1)
+  {   
+    ellipse(surviver.x,surviver.y,80,110)
+    if(bulletGroup.bounceOff(shield))
+    {
+    shieldScore=shieldScore-5
+    }
+  } 
   surviver.velocityY = 8;
   surviver.changeAnimation("running2",runningSurvivor2);
   walk.play();
 }
 if (keyWentUp(DOWN_ARROW)){
-surviver.velocityY = 0;
+  if(shieldFlag===1)
+      {   
+        ellipse(surviver.x,surviver.y,80,110)
+        if(bulletGroup.bounceOff(shield))
+        {
+        shieldScore=shieldScore-5
+        }
+      } 
+      
+  surviver.velocityY = 0;
 surviver.changeAnimation("standing2",standingSurvivor2);
 walk.stop();
 }
-   }
+
+if(shieldFlag===1 && (surviver.velocityX===0||surviver.velocityY===0)){
+  ellipse(surviver.x,surviver.y,80,110)
+  if(bulletGroup.bounceOff(shield))
+  {
+  shieldScore=shieldScore-5
+  }
+}
+}  
    fill(116,130,104,150)
    rectMode(CENTER)
    noStroke()
@@ -701,11 +989,17 @@ walk.stop();
  ellipse(robot2.x,robot2.y,150,150)
  ellipse(robot3.x,robot3.y,150,150)
 drawSprites();
-
-textSize(50);
+fill("red")
+textSize(25);
+stroke(4)
+text("Survivor Health",1700,20)
+textSize(50)
 fill("black")
   text (mouseX+":"+mouseY+":"+surviver.x+":"+surviver.y,720,70)
- 
+  textSize(50);
+  stroke(4);
+ text("score:"+score,100,70)
+ text("Shield score:"+shieldScore,100,110)
 }
 
 function keyPressed(){
@@ -714,6 +1008,8 @@ function keyPressed(){
    
  }
 }
+
+
 function spawnBullet(){
   if (frameCount % 20 === 0){
 
@@ -786,6 +1082,88 @@ robot.x= surviver.x+70;
 bulletGroup.add(bullet)
 bullet.lifetime = 100
 bullet.velocityX=-5
+
 }
+
 }
+
 }
+function spawnBullet2(){
+  if (frameCount % 20 === 0){
+
+
+if(surviver.velocityX ===0 && surviver.x>robot2.x)
+{
+  robot2.x= surviver.x-70;
+  robot2.y=surviver.y;
+  robot2.velocityX =5
+  
+  spritegun2.changeAnimation("right",gun2right)
+  robot2.changeAnimation("right",runningRobot)
+  spritegun2.visible= true;
+  spritegun2.x = robot2.x +30;
+  spritegun2.y = robot2.y
+  var bullet2 = createSprite(spritegun2.x +30,spritegun2.y-10,10,2);
+  bullet2.shapeColor = "white";
+  bulletGroup.add(bullet2)
+  bullet2.lifetime = 100
+  bullet2.velocityX=5
+
+}
+ 
+if(surviver.velocityX ===0 && surviver.x<robot2.x)
+{
+robot2.changeAnimation("left",runningRobot2)
+robot2.velocityX =-5
+robot2.x= surviver.x+70;
+  robot2.y=surviver.y;
+spritegun2.visible= true;
+spritegun2.x = robot2.x -30;
+spritegun2.y = robot2.y
+spritegun2.changeAnimation("left",gun2)
+var bullet2 = createSprite(spritegun2.x -30,spritegun2.y-10,10,2);
+bullet2.shapeColor = "white";
+bulletGroup.add(bullet2)
+bullet2.lifetime = 100
+bullet2.velocityX=-5
+}
+if( keyDown(RIGHT_ARROW) )
+{
+  robot2.changeAnimation("right",runningRobot)
+  robot2.x= surviver.x-70;
+  robot2.y=surviver.y;
+  robot2.velocityX =5
+
+  spritegun2.visible= true;
+  spritegun2.x = robot2.x +30;
+  spritegun2.y = robot2.y
+  spritegun2.changeAnimation("right",gun2right)
+  var bullet2 = createSprite(spritegun2.x +30,spritegun2.y-10,10,2);
+  bullet2.shapeColor = "white";
+bulletGroup.add(bullet2)
+bullet2.lifetime = 100
+bullet2.velocityX=5  
+}
+
+if( keyDown(LEFT_ARROW) ){
+robot2.changeAnimation("left",runningRobot2)
+robot2.velocityX =-5
+
+robot2.x= surviver.x+70;
+  robot2.y=surviver.y;
+ spritegun2.visible= true;
+  spritegun2.x = robot2.x -30;
+  spritegun2.y = robot2.y
+  spritegun2.changeAnimation("left",gun2)
+  var bullet2 = createSprite(spritegun2.x +30,spritegun2.y-10,10,2);
+  bullet2.shapeColor = "white";
+bulletGroup.add(bullet2)
+bullet2.lifetime = 100
+bullet2.velocityX=-5
+
+}
+
+}
+
+}
+
